@@ -28,9 +28,10 @@ app.get("/test", (req, res) => {
 // Configuring routes of User
 app.use("/api/user", require("./routes/userRoutes"));
 
-//http://localhost:5000/api/user
+// Path to user create endpoint
+// http://localhost:5000/api/user
 
-//Path to test endpoint
+// Path to test endpoint
 // http://localhost:5000/test
 
 //Starting the server
