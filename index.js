@@ -13,8 +13,11 @@ dotenv.config();
 // Connecting to database
 connectDatabase();
 
-//Creating an express application
+// Creating an express application
 const app = express();
+
+// Express Json Config
+app.use(express.json())
 
 // Defining the port
 const PORT = process.env.PORT; //Ports ranges from 3000 - 5000
