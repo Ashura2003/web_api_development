@@ -1,6 +1,9 @@
 // Importing the express packages
 const express = require("express");
 
+// Importing the cors package
+const cors = require("cors");
+
 // Importing mongoDB packages
 const connectDatabase = require("./database/database");
 
@@ -13,14 +16,25 @@ dotenv.config();
 // Connecting to database
 connectDatabase();
 
-// Creating an express application
-const app = express();
-
-// Express Json Config
-app.use(express.json())
-
 // Defining the port
 const PORT = process.env.PORT; //Ports ranges from 3000 - 5000
+
+// Creating express app
+const app = express();
+
+// Creating an express application
+
+// Express Json Config
+app.use(express.json());
+
+// Configure Cors Policy
+const corsOptions = {
+  origin: true,
+  credentials: true,
+  optionSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 // Making a test endpoint
 // Endpoints : POST, GET, PUT, DELETE
