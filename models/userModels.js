@@ -1,7 +1,6 @@
 // Importing mongoose package
 const mongoose = require("mongoose");
 
-
 // Creating mongoDB Schema
 const userSchema = new mongoose.Schema({
   firstName: {
@@ -24,7 +23,7 @@ const userSchema = new mongoose.Schema({
 });
 
 // Creating mongoDB model
-const User = mongoose.model("users", userSchema);
+const User = mongoose.model("users_test", userSchema);
 
 // Expoting User module
 module.exports = User;
