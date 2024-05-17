@@ -1,8 +1,11 @@
 // Importing user model
 const userModel = require("../models/userModels");
 
-//Importing bycrypt package
+// Importing bycrypt package
 const bcrypt = require("bcrypt");
+
+// Importing jsonwebtoken package
+const jwt = require("jsonwebtoken");
 
 // Creating a user
 const createUser = async (req, res) => {
@@ -71,41 +74,75 @@ const createUser = async (req, res) => {
 
   // 5.2.4
 };
-// write a logic for login
-// const login = async (req, res) => {
-//     const { email, password } = req.body
 
-//     if (!email && !password) {
-//         return res
-//             .status(400)
-//             .json({ success: false, message: "Fill in all the required fields" })
-//     }
-//     try {
-//         const userExists = await User.findOne({ email })
-//         if (!userExists) {
-//             return res
-//                 .status(400)
-//                 .json({ success: false, message: "Invalid email address" })
-//         }
-//         // converrt the hassed  password using bcrypt
-//         const user = await bcrypt.compare(password, userExists.password)
-//         if (!user) {
-//             return res
-//                 .status(401)
-//                 .json({ success: false, message: "Invalid email or password!!" })
-//         } else {
-//             return res
-//                 .status(200)
-//                 .json({ success: true, message: "Logged in successfull!" })
-//         }
-//     } catch (error) {
-//         res
-//             .status(500)
-//         .json({ success: false, message: "Internal server error:${error}"})
-//     }
-// }
+// Login Function
+
+const loginUser = async (req, res) => {
+  // Check incomming data
+  console.log(req.body);
+
+  // Destructure incoming data
+  const { email, password } = req.body;
+
+  // Validate incoming data
+  if (!email || !password) {
+    return res.json({
+      success: false,
+      message: "Please enter all fields!",
+    });
+  }
+  // try catch
+  try {
+    // Check if the user is already registered
+    const user = await userModel.findOne({ email: email });
+    // What can be the found data?
+    // firstName, lastName, email, password
+
+    // What if the user is not found
+    if (!user) {
+      return res.json({
+        success: false,
+        message: "User not found!",
+      });
+    }
+
+    // Compare the passwords using bcrypt
+    const isValidPassword = await bcrypt.compare(password, user.password);
+
+    // If password does not match
+    if (!isValidPassword) {
+      return res.json({
+        success: false,
+        message: "Invalid Password!",
+      });
+    }
+
+    // Generate token with user data and key
+    const token = await jwt.sign(
+      {
+        id: user._id,
+      },
+      process.env.JWT_SECRET
+    );
+
+    // Response if password matches (send token and user data)
+    res.json({
+      success: true,
+      message: "User Logged In!",
+      token: token,
+      userData: user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      success: false,
+      message: "Internal server Error!",
+    });
+  }
+};
 
 // exporting
 module.exports = {
   createUser,
+  loginUser,
 };

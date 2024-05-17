@@ -44,6 +44,7 @@ app.get("/test", (req, res) => {
 
 // Configuring routes of User
 app.use("/api/user", require("./routes/userRoutes"));
+app.use("/api/user", require("./routes/userRoutes"));
 
 // Path to user create endpoint
 // http://localhost:5000/api/user
