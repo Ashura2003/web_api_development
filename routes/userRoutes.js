@@ -8,6 +8,7 @@ const userController = require("../controllers/usersControllers");
 router.post("/create", userController.createUser);
 router.post("/login", userController.loginUser);
 
+
 // Logic
 // Controller (Exports createUser module) - Routes (imports the module) - index.js (Uses this)
 

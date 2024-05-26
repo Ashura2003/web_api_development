@@ -10,6 +10,9 @@ const connectDatabase = require("./database/database");
 // Importing dotenv packages
 const dotenv = require("dotenv");
 
+// Importing form data
+const acceptFormData = require("express-fileupload");
+
 // dotenv configuration
 dotenv.config();
 
@@ -23,6 +26,9 @@ const PORT = process.env.PORT; //Ports ranges from 3000 - 5000
 const app = express();
 
 // Creating an express application
+
+// Config form data
+app.use(acceptFormData());
 
 // Express Json Config
 app.use(express.json());
@@ -45,6 +51,7 @@ app.get("/test", (req, res) => {
 // Configuring routes of User
 app.use("/api/user", require("./routes/userRoutes"));
 app.use("/api/user", require("./routes/userRoutes"));
+app.use("/api/product", require("./routes/productRoutes"));
 
 // Path to user create endpoint
 // http://localhost:5000/api/user
