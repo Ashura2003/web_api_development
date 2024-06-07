@@ -193,14 +193,16 @@ const updateProduct = async (req, res) => {
     }
 
     // Update the product
-    const updatedProduct = await productModel.findByIdAndUpdate(req.params.id, req.body);
+    const updatedProduct = await productModel.findByIdAndUpdate(
+      req.params.id,
+      req.body
+    );
 
-    res.status(201).jscon({
+    res.status(201).json({
       sucess: true,
       message: "Product updated successfully!",
       data: updatedProduct,
-    })
-
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
