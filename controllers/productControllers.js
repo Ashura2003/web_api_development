@@ -1,5 +1,6 @@
 const path = require("path");
 const productModel = require("../models/productModel");
+const fs = require("fs"); // File System Module
 
 const createProduct = async (req, res) => {
   console.log(req.body);
@@ -154,7 +155,52 @@ const deleteProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
-    // 
+    // if there is an image in the request
+    if (req.files && req.files.productImage) {
+      // destructuring the data
+      const { productImage } = req.files;
+
+      // 1. Generate a random name for the image (abc.jpg) -> (123456-abc.jpg)
+
+      const imageName = `${Date.now()}-${productImage.name}`;
+
+      // 2. Make a upload path (/path/upload - directory)
+
+      const imageUploadPath = path.join(
+        __dirname,
+        `../public/products/${imageName}`
+      );
+
+      // Move the picture in the folder
+      await productImage.mv(imageUploadPath);
+
+      // req.params (id), req.body(updated data =pn,pp,pc,pd) req.files(image)
+      // add new field to req.body
+
+      req.body.productImage = imageName; // Image uploaded and generated name
+
+      // If image is uploaded and req.body is assigned
+      if (req.body.productImage) {
+        const existingProduct = await productModel.findById(req.params.id);
+
+        const oldImagePath = path.join(
+          __dirname,
+          `../public/products/${existingProduct.productImage}`
+        );
+
+        fs.unlinkSync(oldImagePath);
+      }
+    }
+
+    // Update the product
+    const updatedProduct = await productModel.findByIdAndUpdate(req.params.id, req.body);
+
+    res.status(201).jscon({
+      sucess: true,
+      message: "Product updated successfully!",
+      data: updatedProduct,
+    })
+
   } catch (error) {
     console.log(error);
     return res.status(500).json({
