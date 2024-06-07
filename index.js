@@ -30,6 +30,9 @@ const app = express();
 // Config form data
 app.use(acceptFormData());
 
+//Making a static public folder
+app.use(express.static("./public"));
+
 // Express Json Config
 app.use(express.json());
 
